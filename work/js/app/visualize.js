@@ -27,12 +27,21 @@ google.load('visualization', '1', {packages:['corechart']});
         $(document).on('submit', '.search-form', function(e) {
             const INSIGHTS_API_URL = 'https://www.googleapis.com/pagespeedonline/v1/runPagespeed?';
 
-            var url = $(this).find('input[type="url"]').val();
-            var query = $.param( {
-                url: url
-            });
+            var url = $(this).find('input[type="url"]').val(),
+                query = $.param( {
+                    url: url
+                }),
+                scoreElement = document.getElementsByClassName('score')[0],
+                scoreClass = 'score',
+                resultElement = document.getElementsByClassName('result')[0],
+                impactChartElement = document.getElementById('performance-impact-chart'),
+                childs = Array.prototype.slice.call(resultElement.childNodes);
 
             e.preventDefault();
+
+            childs.forEach(function(child) {
+                child.style.display = 'none';
+            });
 
             $.ajax( {
                 type: 'GET',
@@ -41,10 +50,9 @@ google.load('visualization', '1', {packages:['corechart']});
                 crossDomain: true,
                 success: function(response) {
                     console.log(response);
-                    var results = response.formattedResults.ruleResults,
-                        resultKeys = Object.keys(results),
-                        data = [['Task', 'Hours per Day']],
-                        colors = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd', '#8c564b', '#e377c2', '#7f7f7f', '#bcbd22', '#17becf'],
+                    var ruleResults = response.formattedResults.ruleResults,
+                        ruleResultKeys = Object.keys(ruleResults),
+                        data = [],
                         options = {
                             backgroundColor: '#000000',
                             legend: {
@@ -53,21 +61,34 @@ google.load('visualization', '1', {packages:['corechart']});
                                 }
                             }
                         },
-                        chartData,
-                        chart;
+                        chart,
+                        sections = Array.prototype.slice.call(document.getElementsByTagName('section'));
 
-                    document.getElementById('performance-impact').style.display = 'block';
+                    scoreElement.innerText = response.score;
+                    if(100 === response.score) {
+                        scoreElement.className = scoreClass + ' perfect';
+                    } else if(80 < response.score) {
+                        scoreElement.className = scoreClass + ' high';
+                    } else if(60 < response.score) {
+                        scoreElement.className = scoreClass + ' middle';
+                    } else {
+                        scoreElement.className = scoreClass + ' low';
+                    }
 
-                    resultKeys.forEach(function(key) {
+                    sections.forEach(function(section) {
+                        section.style.display = 'block';
+                    });
+
+                    ruleResultKeys.forEach(function(key) {
                         data.push( [
-                            results[key].localizedRuleName,
-                            results[key].ruleImpact
+                            ruleResults[key].localizedRuleName,
+                            ruleResults[key].ruleImpact
                         ]);
                     });
 
                     data = google.visualization.arrayToDataTable(data);
 
-                    chart = new google.visualization.PieChart(document.getElementById('performance-impact-chart'));
+                    chart = new google.visualization.PieChart(impactChartElement);
                     chart.draw(data, options);
 
                 }

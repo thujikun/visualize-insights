@@ -24,21 +24,42 @@ h1 {
     }
 }
 
-canvas { width: 100%; height: 100% }
-
 .result {
     padding-top: 30px;
     text-align: center;
     color: #ffffff;
 
+    section {
+        margin-bottom: 30px;
+        display: none;
+    }
+
     h2 {
         font-size: 25px;
         font-family: "Varela";
     }
-}
 
-#performance-impact {
-    display: none;
+    .score {
+        margin-top: 20px;
+        font-size: 100px;
+        font-family: "Rock Salt";
+
+        &.perfect {
+            color: #0000ff;
+        }
+
+        &.high {
+            color: #00ff00;
+        }
+
+        &.middle {
+            color: #ffff00;
+        }
+
+        &.low {
+            color: #ff0000;
+        }
+    }
 }
 
 #performance-impact-chart {

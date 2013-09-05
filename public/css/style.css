@@ -90,29 +90,45 @@ h1 {
 }
 
 /* line 27, ../../work/sass/style.scss */
-canvas {
-  width: 100%;
-  height: 100%;
-}
-
-/* line 29, ../../work/sass/style.scss */
 .result {
   padding-top: 30px;
   text-align: center;
   color: #ffffff;
 }
-/* line 34, ../../work/sass/style.scss */
+/* line 32, ../../work/sass/style.scss */
+.result section {
+  margin-bottom: 30px;
+  display: none;
+}
+/* line 37, ../../work/sass/style.scss */
 .result h2 {
   font-size: 25px;
   font-family: "Varela";
 }
-
-/* line 40, ../../work/sass/style.scss */
-#performance-impact {
-  display: none;
+/* line 42, ../../work/sass/style.scss */
+.result .score {
+  margin-top: 20px;
+  font-size: 100px;
+  font-family: "Rock Salt";
+}
+/* line 47, ../../work/sass/style.scss */
+.result .score.perfect {
+  color: #0000ff;
+}
+/* line 51, ../../work/sass/style.scss */
+.result .score.high {
+  color: #00ff00;
+}
+/* line 55, ../../work/sass/style.scss */
+.result .score.middle {
+  color: #ffff00;
+}
+/* line 59, ../../work/sass/style.scss */
+.result .score.low {
+  color: #ff0000;
 }
 
-/* line 44, ../../work/sass/style.scss */
+/* line 65, ../../work/sass/style.scss */
 #performance-impact-chart {
   display: inline-block;
   width: 900px;
