@@ -1,0 +1,13 @@
+{
+  "name": "visualize-insights",
+  "version": "0.0.1",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "components"
+  ],
+  "dependencies": {
+    "zepto": "~1.0.0",
+    "d3": "~3.3.2"
+  }
+}

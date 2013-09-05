@@ -1,0 +1,14 @@
+extends ../layout
+
+block content
+  h1 #{title}
+  form.search-form(name="search-form")
+    input(type="url", name="url", autocomplete="on", placeholder="http://example.com")
+
+  div.result
+    section#performance-impact
+      h2 Performance Impact
+      div#performance-impact-chart
+
+block js-app
+  script(src='/js/app/visualize.js')
