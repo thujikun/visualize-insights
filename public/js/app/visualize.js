@@ -1,83 +1,272 @@
 google.load('visualization', '1', {packages:['corechart']});
 
-(function($) {
+(function() {
 
-    $.fn.googlize = function() {
-        var $this = $(this),
-            texts = $this.text().split(''),
-            colors = ['rgb(103, 122, 246)', 'rgb(194, 39, 45)', 'rgb(237, 190, 0)', 'rgb(98, 170, 0)'],
-            colorIndex = 0,
-            words = [];
+    /**
+     * @class util
+     * utility methods
+     */
+    var util = Object.create(
+        Object.prototype,
+        {
+            obj2Arr: {
+                writable : true,
+                enumerable : false,
+                configurable : false,
+                /**
+                 * @member util
+                 * @method obj2Arr
+                 * change object like array to native array
+                 * @param {Object} obj object like array
+                 * @return {Array} native array
+                 */
+                value: function(obj) {
+                    return Array.prototype.slice.call(obj);
+                }
+            },
 
-        texts.forEach(function(text) {
-            if(text.match(/\s/)) {
-                words.push(text);
-            } else {
-                words.push('<span style="color: '+ colors[colorIndex++ % colors.length] +';">'+ text +'</span>');
-            }
-        });
+            obj2Query: {
+                writable : true,
+                enumerable : false,
+                configurable : false,
+                /**
+                 * @member util
+                 * @method obj2Query
+                 * change object like array to native array
+                 * @param {Object} obj object like array
+                 * @return {Array} native array
+                 */
+                value: (function(obj) {
+                    var keys = Object.keys(obj),
+                        query = [];
 
-        $this.html(words.join(''));
-    };
+                    keys.forEach(function(key) {
+                        query.push(encodeURIComponent(key) + '=' + encodeURIComponent(obj[key]));
+                    });
 
-    $(function() {
+                    return query.join('&');
+                })
+            },
 
-        $('h1').googlize();
+            googlize: {
+                writable : true,
+                enumerable : false,
+                configurable : false,
+                /**
+                 * @member util
+                 * @method googlize
+                 * change string color like google
+                 * @param {Object} DOM object
+                 */
+                value: function(element) {
+                    var texts = element.innerText.split(''),
+                        colors = ['rgb(103, 122, 246)', 'rgb(194, 39, 45)', 'rgb(237, 190, 0)', 'rgb(98, 170, 0)'],
+                        colorIndex = 0,
+                        words = [];
 
-        $(document).on('submit', '.search-form', function(e) {
-            const INSIGHTS_API_URL = 'https://www.googleapis.com/pagespeedonline/v1/runPagespeed?';
+                    texts.forEach(function(text) {
+                        if(text.match(/\s/)) {
+                            words.push(text);
+                        } else {
+                            words.push('<span style="color: '+ colors[colorIndex++ % colors.length] +';">'+ text +'</span>');
+                        }
+                    });
 
-            var url = $(this).find('input[type="url"]').val(),
-                query = $.param( {
-                    url: url
-                }),
-                scoreElement = document.getElementsByClassName('score')[0],
-                scoreClass = 'score',
-                resultElement = document.getElementsByClassName('result')[0],
-                impactChartElement = document.getElementById('performance-impact-chart'),
-                childs = Array.prototype.slice.call(resultElement.childNodes);
+                    element.innerHTML = (words.join(''));
+                }
+            },
 
-            e.preventDefault();
+            process: {
+                writable : true,
+                enumerable : false,
+                configurable : false,
+                /**
+                 * @member util
+                 * @class util.process
+                 * manage processing functions
+                 */
+                value: {
 
-            childs.forEach(function(child) {
-                child.style.display = 'none';
-            });
+                    /**
+                     * @member util.process
+                     * @property {Boolean} processing processing flag
+                     */
+                    processing: false,
 
-            $.ajax( {
-                type: 'GET',
-                url: INSIGHTS_API_URL + query,
-                dataType: 'jsonp',
-                crossDomain: true,
-                success: function(response) {
-                    console.log(response);
-                    var ruleResults = response.formattedResults.ruleResults,
-                        ruleResultKeys = Object.keys(ruleResults),
-                        data = [],
-                        options = {
-                            backgroundColor: '#000000',
-                            legend: {
-                                textStyle: {
-                                    color: '#ffffff'
-                                }
-                            }
-                        },
-                        chart,
-                        sections = Array.prototype.slice.call(document.getElementsByTagName('section'));
+                    /**
+                     * @member util.process
+                     * @method set
+                     * is processing
+                     * @return {Boolean} check processing
+                     */
+                    is: function() {
+                        return this.processing;
+                    },
 
-                    scoreElement.innerText = response.score;
-                    if(100 === response.score) {
-                        scoreElement.className = scoreClass + ' perfect';
-                    } else if(80 < response.score) {
-                        scoreElement.className = scoreClass + ' high';
-                    } else if(60 < response.score) {
-                        scoreElement.className = scoreClass + ' middle';
-                    } else {
-                        scoreElement.className = scoreClass + ' low';
+                    /**
+                     * @member util.process
+                     * @method on
+                     * processing on
+                     */
+                    on: function() {
+                        this.processing = true;
+                    },
+
+                    /**
+                     * @member util.process
+                     * @method off
+                     * processing off
+                     */
+                    off: function() {
+                        this.processing = false;
                     }
+                }
+            }
+
+        }
+    );
+
+    /**
+     * @class insightsVisualizer
+     * visualize pagespeed insights result
+     */
+    var insightsVisualizer = Object.create(
+        Object.prototype,
+        {
+            CONST: {
+                writable : false,
+                enumerable : false,
+                configurable : false,
+                /**
+                 * @member insightsVisualizer
+                 * @property {Object} CONST constants of insightsVisualizer
+                 * @property {String} CONST.INSIGHTS_API_URL insight API URL
+                 * @property {String} CONST.SCORE_CLASS score element class name
+                 */
+                value: {
+                    INSIGHTS_API_URL: 'https://www.googleapis.com/pagespeedonline/v1/runPagespeed?',
+                    SCORE_CLASS: 'score '
+                }
+            },
+
+            analyzePerformance: {
+                writable : true,
+                enumerable : false,
+                configurable : false,
+                /**
+                 * @member insightsVisualizer
+                 * @method analyzePerformance
+                 * execute pagespeed insight API
+                 * @param {Object} e Event object
+                 */
+                value: function(e) {
+                    var url = e.currentTarget.querySelector('input[type="url"]').value,
+                        query = util.obj2Query( {
+                            url: url
+                        }),
+                        resultElement = document.getElementsByClassName('result')[0],
+                        childs = util.obj2Arr(resultElement.childNodes),
+                        xhr = new XMLHttpRequest();
+
+                    e.preventDefault();
+
+                    if(util.process.is()) return;
+
+                    util.process.on();
+
+                    childs.forEach(function(child) {
+                        child.style.display = 'none';
+                    });
+
+                    xhr.open('GET', this.CONST.INSIGHTS_API_URL + query, true);
+                    xhr.responseType = 'JSON';
+                    xhr.onload = function() {
+                        util.process.off();
+                        if(this.status === 200) {
+                            insightsVisualizer.visualizeInsightsResult(JSON.parse(this.responseText));
+                        } else {
+                            alert('error');
+                        }
+                    };
+                    xhr.send();
+                }
+            },
+
+            visualizeInsightsResult: {
+                writable : true,
+                enumerable : false,
+                configurable : false,
+                /**
+                 * @member insightsVisualizer
+                 * @method visualizeInsightsResult
+                 * callback of pagespeed insight API
+                 * @param {Object} response API response
+                 */
+                value: function(response) {
+                    console.log(response);
+
+                    var ruleResults = response.formattedResults.ruleResults,
+                        sections = util.obj2Arr(document.getElementsByTagName('section')),
+                        scoreElement = document.getElementsByClassName('score')[0],
+                        data;
 
                     sections.forEach(function(section) {
                         section.style.display = 'block';
                     });
+
+                    //render score
+                    scoreElement.innerText = response.score;
+                    scoreElement.className = this.CONST.SCORE_CLASS + this.gradeScore(response.score);
+
+                    // render impact chart
+                    data = this.getImpactChartData(ruleResults);
+                    this.renderChart('pie', data, document.getElementById('performance-impact-chart'));
+
+                }
+            },
+
+            gradeScore: {
+                writable : true,
+                enumerable : false,
+                configurable : false,
+                /**
+                 * @member insightsVisualizer
+                 * @method gradeScore
+                 * devide grade rank by score
+                 * @param {Number} score performance score
+                 * @return {String} grade rank
+                 */
+                value: function(score) {
+                    var rank = '';
+
+                    if(100 === score) {
+                        rank = 'perfect';
+                    } else if(80 < score) {
+                        rank = 'high';
+                    } else if(60 < score) {
+                        rank = 'middle';
+                    } else {
+                        rank = 'low';
+                    }
+
+                    return rank;
+                }
+            },
+
+            getImpactChartData: {
+                writable : true,
+                enumerable : false,
+                configurable : false,
+                /**
+                 * @member insightsVisualizer
+                 * @method getImpactChartData
+                 * make data for impact chart from insight result
+                 * @param {Object} ruleResults insight result
+                 * @return {Object} data for impact chart data
+                 */
+                value: function(ruleResults) {
+                    var ruleResultKeys = Object.keys(ruleResults),
+                        data = [];
 
                     ruleResultKeys.forEach(function(key) {
                         data.push( [
@@ -86,15 +275,48 @@ google.load('visualization', '1', {packages:['corechart']});
                         ]);
                     });
 
-                    data = google.visualization.arrayToDataTable(data);
-
-                    chart = new google.visualization.PieChart(impactChartElement);
-                    chart.draw(data, options);
-
+                    return google.visualization.arrayToDataTable(data);
                 }
-            });
+            },
 
-        });
+            /**
+             * @member insightsVisualizer
+             * @method renderChart
+             * render chart from data
+             * @param {String} type chart type
+             * @param {Object} data data for chart
+             * @param {Object} element DOM element of chart
+             */
+            renderChart: {
+                writable : true,
+                enumerable : false,
+                configurable : false,
+                value: function(type, data, element) {
+                    var chart,
+                        options = {
+                            backgroundColor: '#000000',
+                            legend: {
+                                textStyle: {
+                                    color: '#ffffff'
+                                }
+                            }
+                        };
 
-    });
-}(Zepto));
+                    switch(type) {
+                        case 'pie':
+                            chart = new google.visualization.PieChart(element);
+                            break;
+                    }
+
+                    chart.draw(data, options);
+                }
+            }
+        }
+    );
+
+    document.addEventListener('DOMContentLoaded', function() {
+        util.googlize(document.getElementsByTagName('h1')[0]);
+        document.getElementsByClassName('search-form')[0].addEventListener('submit', insightsVisualizer.analyzePerformance.bind(insightsVisualizer), false);
+    }, false);
+
+}());

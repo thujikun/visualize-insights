@@ -25,7 +25,7 @@ module.exports = function (grunt) {
           'work/js/app/*.js',
           'work/sass/*.scss',
         ],
-        tasks: ['jshint', 'uglify', 'concat', 'compass', 'delayed-livereload']
+        tasks: ['jshint', 'uglify', 'concat', 'compass', 'delayed-livereload', 'jsduck']
       },
       jade: {
         files: ['app/views/**/*.jade'],
@@ -34,12 +34,9 @@ module.exports = function (grunt) {
     },
     uglify: {
       options: {
-        toplevel: true,
-        compress: true,
         beautify: {
           ascii_only: true,
         },
-        mangle: true,
         preserveLicenseComments: true,
       },
       files: {
@@ -49,13 +46,6 @@ module.exports = function (grunt) {
     concat: {
       options: {
         separator: ';',
-      },
-      lib: {
-        src: [
-          'work/js/lib/d3/d3.min.js',
-          'work/js/lib/zepto/zepto.min.js',
-        ],
-        dest: 'public/js/lib/libraries.js',
       },
       app: {
         src: [
@@ -70,6 +60,15 @@ module.exports = function (grunt) {
           config: 'config.rb',
           environment: 'development'
         },
+      },
+    },
+    jsduck: {
+      app: {
+        src: ['work/js/app/'],
+        dest: 'public/docs',
+        options: {
+          title: 'JavaScript Doc'
+        }
       },
     },
     jshint: {
@@ -105,10 +104,9 @@ module.exports = function (grunt) {
           sessionStorage: true,
           getComputedStyle: true,
           Zepto: true,
-          THREE: true,
           requestAnimationFrame: true,
-          d3: true,
           google: true,
+          XMLHttpRequest: true,
         },
       },
       defaults: ['work/js/app/*.js'],
@@ -139,6 +137,7 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-contrib-concat');
   grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-contrib-compass');
+  grunt.loadNpmTasks('grunt-jsduck');
 
   grunt.registerTask('default', ['uglify', 'concat', 'watch']);
 };

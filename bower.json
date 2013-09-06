@@ -7,7 +7,5 @@
     "components"
   ],
   "dependencies": {
-    "zepto": "~1.0.0",
-    "d3": "~3.3.2"
   }
 }
