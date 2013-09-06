@@ -25,7 +25,7 @@ module.exports = function (grunt) {
           'work/js/app/*.js',
           'work/sass/*.scss',
         ],
-        tasks: ['jshint', 'uglify', 'concat', 'compass', 'delayed-livereload', 'jsduck']
+        tasks: ['jshint', 'uglify', 'compass', 'delayed-livereload', 'jsduck']
       },
       jade: {
         files: ['app/views/**/*.jade'],
@@ -34,24 +34,18 @@ module.exports = function (grunt) {
     },
     uglify: {
       options: {
+        toplevel: true,
+        compress: true,
         beautify: {
           ascii_only: true,
         },
+        mangle: true,
         preserveLicenseComments: true,
       },
-      files: {
-        'public/js/app/visualize.js': 'work/js/app/visualize.js',
-      }
-    },
-    concat: {
-      options: {
-        separator: ';',
-      },
       app: {
-        src: [
-          'work/js/app/visualize.js',
-        ],
-        dest: 'public/js/app/visualize.js',
+        files: {
+          'public/js/app/visualize.js': 'work/js/app/visualize.js',
+        }
       },
     },
     compass: {
@@ -134,10 +128,9 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-develop');
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-contrib-uglify');
-  grunt.loadNpmTasks('grunt-contrib-concat');
   grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-contrib-compass');
   grunt.loadNpmTasks('grunt-jsduck');
 
-  grunt.registerTask('default', ['uglify', 'concat', 'watch']);
+  grunt.registerTask('default', ['uglify', 'compass', 'jsduck', 'watch']);
 };
