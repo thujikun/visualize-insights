@@ -1,7 +1,10 @@
 var express = require('express'),
-  mongoose = require('mongoose'),
-  fs = require('fs'),
-  config = require('./config/config');
+    app = express();
+    mongoose = require('mongoose'),
+    server = require('http').createServer(app),
+    socketio = require('socket.io').listen(server),
+    fs = require('fs'),
+    config = require('./config/config');
 
 mongoose.connect(config.db);
 var db = mongoose.connection;
@@ -16,9 +19,9 @@ fs.readdirSync(modelsPath).forEach(function (file) {
   }
 });
 
-var app = express();
-
 require('./config/express')(app, config);
 require('./config/routes')(app);
 
-app.listen(config.port);
+server.listen(config.port);
+
+require('./config/socket')(socketio);

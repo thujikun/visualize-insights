@@ -23,313 +23,394 @@
 </span>     * @class util
      * utility methods
      */
-    var util = Object.create(
-        Object.prototype,
-        {
-            obj2Arr: {
-                writable : true,
-                enumerable : false,
-                configurable : false,
-<span id='util-method-obj2Arr'>                /**
-</span>                 * @member util
-                 * @method obj2Arr
-                 * change object like array to native array
-                 * @param {Object} obj object like array
-                 * @return {Array} native array
-                 */
-                value: function(obj) {
-                    return Array.prototype.slice.call(obj);
-                }
-            },
+    var util = Object.create(Object.prototype, {
+        obj2Arr: {
+            writable : true,
+            enumerable : false,
+            configurable : false,
+<span id='util-method-obj2Arr'>            /**
+</span>             * @member util
+             * @method obj2Arr
+             * change object like array to native array
+             * @param {Object} obj object like array
+             * @return {Array} native array
+             */
+            value: function(obj) {
+                return Array.prototype.slice.call(obj);
+            }
+        },
 
-            obj2Query: {
-                writable : true,
-                enumerable : false,
-                configurable : false,
-<span id='util-method-obj2Query'>                /**
-</span>                 * @member util
-                 * @method obj2Query
-                 * change object like array to native array
-                 * @param {Object} obj object like array
-                 * @return {Array} native array
-                 */
-                value: (function(obj) {
-                    var keys = Object.keys(obj),
-                        query = [];
+        obj2Query: {
+            writable : true,
+            enumerable : false,
+            configurable : false,
+<span id='util-method-obj2Query'>            /**
+</span>             * @member util
+             * @method obj2Query
+             * change object like array to native array
+             * @param {Object} obj object like array
+             * @return {Array} native array
+             */
+            value: (function(obj) {
+                var keys = Object.keys(obj),
+                    query = [];
 
-                    keys.forEach(function(key) {
-                        query.push(encodeURIComponent(key) + '=' + encodeURIComponent(obj[key]));
-                    });
+                keys.forEach(function(key) {
+                    query.push(encodeURIComponent(key) + '=' + encodeURIComponent(obj[key]));
+                });
 
-                    return query.join('&amp;');
-                })
-            },
+                return query.join('&amp;');
+            })
+        },
 
-            googlize: {
-                writable : true,
-                enumerable : false,
-                configurable : false,
-<span id='util-method-googlize'>                /**
-</span>                 * @member util
-                 * @method googlize
-                 * change string color like google
-                 * @param {Object} DOM object
-                 */
-                value: function(element) {
-                    var texts = element.innerText.split(''),
-                        colors = ['rgb(103, 122, 246)', 'rgb(194, 39, 45)', 'rgb(237, 190, 0)', 'rgb(98, 170, 0)'],
-                        colorIndex = 0,
-                        words = [];
+        googlize: {
+            writable : true,
+            enumerable : false,
+            configurable : false,
+<span id='util-method-googlize'>            /**
+</span>             * @member util
+             * @method googlize
+             * change string color like google
+             * @param {Object} DOM object
+             */
+            value: function(element) {
+                var texts = element.innerText.split(''),
+                    colors = ['rgb(103, 122, 246)', 'rgb(194, 39, 45)', 'rgb(237, 190, 0)', 'rgb(98, 170, 0)'],
+                    colorIndex = 0,
+                    words = [];
 
-                    texts.forEach(function(text) {
-                        if(text.match(/\s/)) {
-                            words.push(text);
-                        } else {
-                            words.push('&lt;span style=&quot;color: '+ colors[colorIndex++ % colors.length] +';&quot;&gt;'+ text +'&lt;/span&gt;');
-                        }
-                    });
-
-                    element.innerHTML = (words.join(''));
-                }
-            },
-
-            process: {
-                writable : true,
-                enumerable : false,
-                configurable : false,
-<span id='util-process'>                /**
-</span>                 * @member util
-                 * @class util.process
-                 * manage processing functions
-                 */
-                value: {
-
-<span id='util-process-property-processing'>                    /**
-</span>                     * @member util.process
-                     * @property {Boolean} processing processing flag
-                     */
-                    processing: false,
-
-<span id='util-process-method-set'>                    /**
-</span>                     * @member util.process
-                     * @method set
-                     * is processing
-                     * @return {Boolean} check processing
-                     */
-                    is: function() {
-                        return this.processing;
-                    },
-
-<span id='util-process-method-on'>                    /**
-</span>                     * @member util.process
-                     * @method on
-                     * processing on
-                     */
-                    on: function() {
-                        this.processing = true;
-                    },
-
-<span id='util-process-method-off'>                    /**
-</span>                     * @member util.process
-                     * @method off
-                     * processing off
-                     */
-                    off: function() {
-                        this.processing = false;
+                texts.forEach(function(text) {
+                    if(text.match(/\s/)) {
+                        words.push(text);
+                    } else {
+                        words.push('&lt;span style=&quot;color: '+ colors[colorIndex++ % colors.length] +';&quot;&gt;'+ text +'&lt;/span&gt;');
                     }
+                });
+
+                element.innerHTML = (words.join(''));
+            }
+        },
+
+        process: {
+            writable : true,
+            enumerable : false,
+            configurable : false,
+<span id='util-process'>            /**
+</span>             * @member util
+             * @class util.process
+             * manage processing functions
+             */
+            value: {
+
+<span id='util-process-property-processing'>                /**
+</span>                 * @member util.process
+                 * @property {Boolean} processing processing flag
+                 */
+                processing: false,
+
+<span id='util-process-method-set'>                /**
+</span>                 * @member util.process
+                 * @method set
+                 * is processing
+                 * @return {Boolean} check processing
+                 */
+                is: function() {
+                    return this.processing;
+                },
+
+<span id='util-process-method-on'>                /**
+</span>                 * @member util.process
+                 * @method on
+                 * processing on
+                 */
+                on: function() {
+                    this.processing = true;
+                },
+
+<span id='util-process-method-off'>                /**
+</span>                 * @member util.process
+                 * @method off
+                 * processing off
+                 */
+                off: function() {
+                    this.processing = false;
                 }
             }
-
         }
-    );
+
+    });
+
+<span id='SocketManager'>    /**
+</span>     * @class SocketManager
+     * manage socket.io
+     * @param {String} url socket.io server url
+     */
+    var SocketManager = function() {
+        this.init.apply(this, arguments);
+    };
+
+    Object.defineProperties(SocketManager.prototype, {
+
+<span id='SocketManager-method-init'>        /**
+</span>         * @member SocketManager
+         * @method init
+         * SocketManager constructor
+         */
+        init: {
+            writable : true,
+            enumerable : false,
+            configurable : false,
+            value: function(url) {
+                this.socket = io.connect(url);
+            }
+        },
+
+<span id='SocketManager-method-on'>        /**
+</span>         * @member SocketManager
+         * @method on
+         * observe server send event
+         * @param {String} channel channel name
+         * @param {Function} fn callback from server send event
+         */
+        on: {
+            writable : true,
+            enumerable : false,
+            configurable : false,
+            value: function(channel, fn) {
+                this.socket.on(channel, fn);
+            }
+        },
+
+<span id='SocketManager-method-send'>        /**
+</span>         * @member SocketManager
+         * @method send
+         * send message to server
+         * @param {String} channel channel name
+         * @param {message} message parameter to server
+         */
+        send: {
+            writable : true,
+            enumerable : false,
+            configurable : false,
+            value: function(channel, message) {
+                this.socket.emit(channel, message);
+            }
+        }
+    });
 
 <span id='insightsVisualizer'>    /**
 </span>     * @class insightsVisualizer
      * visualize pagespeed insights result
      */
-    var insightsVisualizer = Object.create(
-        Object.prototype,
-        {
-            CONST: {
-                writable : false,
-                enumerable : false,
-                configurable : false,
-<span id='insightsVisualizer-property-CONST'>                /**
-</span>                 * @member insightsVisualizer
-                 * @property {Object} CONST constants of insightsVisualizer
-                 * @property {String} CONST.INSIGHTS_API_URL insight API URL
-                 * @property {String} CONST.SCORE_CLASS score element class name
-                 */
-                value: {
-                    INSIGHTS_API_URL: 'https://www.googleapis.com/pagespeedonline/v1/runPagespeed?',
-                    SCORE_CLASS: 'score '
+    var insightsVisualizer = Object.create(Object.prototype, {
+        CONST: {
+            writable : false,
+            enumerable : false,
+            configurable : false,
+<span id='insightsVisualizer-property-CONST'>            /**
+</span>             * @member insightsVisualizer
+             * @property {Object} CONST constants of insightsVisualizer
+             * @property {String} CONST.INSIGHTS_API_URL insight API URL
+             * @property {String} CONST.SCORE_CLASS score element class name
+             */
+            value: {
+                INSIGHTS_API_URL: 'https://www.googleapis.com/pagespeedonline/v1/runPagespeed?',
+                SCORE_CLASS: 'score '
+            }
+        },
+
+        socket: {
+            writable : false,
+            enumerable : false,
+            configurable : false,
+<span id='insightsVisualizer-property-socket'>            /**
+</span>             * @member insightsVisualizer
+             * @property {Object} socket socket.io manager instance
+             */
+            value: new SocketManager('/')
+        },
+
+        channels: {
+            writable : false,
+            enumerable : false,
+            configurable : false,
+<span id='insightsVisualizer-property-channels'>            /**
+</span>             * @member insightsVisualizer
+             * @property {Object} channels socket.io channel Info
+             * @property {String} channels.get get insights result channel
+             * @property {String} channels.set set insights result channel
+             */
+            value: {
+                get: 'getInsightsResult',
+                set: 'setInsightsResult'
+            }
+        },
+
+        analyzePerformance: {
+            writable : true,
+            enumerable : false,
+            configurable : false,
+<span id='insightsVisualizer-method-analyzePerformance'>            /**
+</span>             * @member insightsVisualizer
+             * @method analyzePerformance
+             * execute pagespeed insight API
+             * @param {Object} e Event object
+             */
+            value: function(e) {
+                var url = e.currentTarget.querySelector('input[type=&quot;url&quot;]').value,
+                    query = util.obj2Query( {
+                        url: url
+                    }),
+                    resultElement = document.getElementsByClassName('result')[0],
+                    childs = util.obj2Arr(resultElement.childNodes),
+                    xhr = new XMLHttpRequest();
+
+                e.preventDefault();
+
+                if(util.process.is()) return;
+
+                util.process.on();
+
+                childs.forEach(function(child) {
+                    child.style.display = 'none';
+                });
+
+                xhr.open('GET', this.CONST.INSIGHTS_API_URL + query, true);
+                xhr.responseType = 'JSON';
+                xhr.onload = function() {
+                    util.process.off();
+                    if(this.status === 200) {
+                        insightsVisualizer.visualizeInsightsResult(JSON.parse(this.responseText));
+                    } else {
+                        alert('error');
+                    }
+                };
+                xhr.send();
+            }
+        },
+
+        visualizeInsightsResult: {
+            writable : true,
+            enumerable : false,
+            configurable : false,
+<span id='insightsVisualizer-method-visualizeInsightsResult'>            /**
+</span>             * @member insightsVisualizer
+             * @method visualizeInsightsResult
+             * callback of pagespeed insight API
+             * @param {Object} response API response
+             */
+            value: function(response) {
+                console.log(response);
+
+                var ruleResults = response.formattedResults.ruleResults,
+                    sections = util.obj2Arr(document.getElementsByTagName('section')),
+                    scoreElement = document.getElementsByClassName('score')[0],
+                    data;
+
+                this.socket.send(this.channels.set, response);
+
+                sections.forEach(function(section) {
+                    section.style.display = 'block';
+                });
+
+                //render score
+                scoreElement.innerText = response.score;
+                scoreElement.className = this.CONST.SCORE_CLASS + this.gradeScore(response.score);
+
+                // render impact chart
+                data = this.getImpactChartData(ruleResults);
+                this.renderChart('pie', data, document.getElementById('performance-impact-chart'));
+
+            }
+        },
+
+        gradeScore: {
+            writable : true,
+            enumerable : false,
+            configurable : false,
+<span id='insightsVisualizer-method-gradeScore'>            /**
+</span>             * @member insightsVisualizer
+             * @method gradeScore
+             * devide grade rank by score
+             * @param {Number} score performance score
+             * @return {String} grade rank
+             */
+            value: function(score) {
+                var rank = '';
+
+                if(100 === score) {
+                    rank = 'perfect';
+                } else if(80 &lt; score) {
+                    rank = 'high';
+                } else if(60 &lt; score) {
+                    rank = 'middle';
+                } else {
+                    rank = 'low';
                 }
-            },
 
-            analyzePerformance: {
-                writable : true,
-                enumerable : false,
-                configurable : false,
-<span id='insightsVisualizer-method-analyzePerformance'>                /**
-</span>                 * @member insightsVisualizer
-                 * @method analyzePerformance
-                 * execute pagespeed insight API
-                 * @param {Object} e Event object
-                 */
-                value: function(e) {
-                    var url = e.currentTarget.querySelector('input[type=&quot;url&quot;]').value,
-                        query = util.obj2Query( {
-                            url: url
-                        }),
-                        resultElement = document.getElementsByClassName('result')[0],
-                        childs = util.obj2Arr(resultElement.childNodes),
-                        xhr = new XMLHttpRequest();
+                return rank;
+            }
+        },
 
-                    e.preventDefault();
+        getImpactChartData: {
+            writable : true,
+            enumerable : false,
+            configurable : false,
+<span id='insightsVisualizer-method-getImpactChartData'>            /**
+</span>             * @member insightsVisualizer
+             * @method getImpactChartData
+             * make data for impact chart from insight result
+             * @param {Object} ruleResults insight result
+             * @return {Object} data for impact chart data
+             */
+            value: function(ruleResults) {
+                var ruleResultKeys = Object.keys(ruleResults),
+                    data = [];
 
-                    if(util.process.is()) return;
+                ruleResultKeys.forEach(function(key) {
+                    data.push( [
+                        ruleResults[key].localizedRuleName,
+                        ruleResults[key].ruleImpact
+                    ]);
+                });
 
-                    util.process.on();
+                return google.visualization.arrayToDataTable(data);
+            }
+        },
 
-                    childs.forEach(function(child) {
-                        child.style.display = 'none';
-                    });
-
-                    xhr.open('GET', this.CONST.INSIGHTS_API_URL + query, true);
-                    xhr.responseType = 'JSON';
-                    xhr.onload = function() {
-                        util.process.off();
-                        if(this.status === 200) {
-                            insightsVisualizer.visualizeInsightsResult(JSON.parse(this.responseText));
-                        } else {
-                            alert('error');
+<span id='insightsVisualizer-method-renderChart'>        /**
+</span>         * @member insightsVisualizer
+         * @method renderChart
+         * render chart from data
+         * @param {String} type chart type
+         * @param {Object} data data for chart
+         * @param {Object} element DOM element of chart
+         */
+        renderChart: {
+            writable : true,
+            enumerable : false,
+            configurable : false,
+            value: function(type, data, element) {
+                var chart,
+                    options = {
+                        backgroundColor: '#000000',
+                        legend: {
+                            textStyle: {
+                                color: '#ffffff'
+                            }
                         }
                     };
-                    xhr.send();
+
+                switch(type) {
+                    case 'pie':
+                        chart = new google.visualization.PieChart(element);
+                        break;
                 }
-            },
 
-            visualizeInsightsResult: {
-                writable : true,
-                enumerable : false,
-                configurable : false,
-<span id='insightsVisualizer-method-visualizeInsightsResult'>                /**
-</span>                 * @member insightsVisualizer
-                 * @method visualizeInsightsResult
-                 * callback of pagespeed insight API
-                 * @param {Object} response API response
-                 */
-                value: function(response) {
-                    console.log(response);
-
-                    var ruleResults = response.formattedResults.ruleResults,
-                        sections = util.obj2Arr(document.getElementsByTagName('section')),
-                        scoreElement = document.getElementsByClassName('score')[0],
-                        data;
-
-                    sections.forEach(function(section) {
-                        section.style.display = 'block';
-                    });
-
-                    //render score
-                    scoreElement.innerText = response.score;
-                    scoreElement.className = this.CONST.SCORE_CLASS + this.gradeScore(response.score);
-
-                    // render impact chart
-                    data = this.getImpactChartData(ruleResults);
-                    this.renderChart('pie', data, document.getElementById('performance-impact-chart'));
-
-                }
-            },
-
-            gradeScore: {
-                writable : true,
-                enumerable : false,
-                configurable : false,
-<span id='insightsVisualizer-method-gradeScore'>                /**
-</span>                 * @member insightsVisualizer
-                 * @method gradeScore
-                 * devide grade rank by score
-                 * @param {Number} score performance score
-                 * @return {String} grade rank
-                 */
-                value: function(score) {
-                    var rank = '';
-
-                    if(100 === score) {
-                        rank = 'perfect';
-                    } else if(80 &lt; score) {
-                        rank = 'high';
-                    } else if(60 &lt; score) {
-                        rank = 'middle';
-                    } else {
-                        rank = 'low';
-                    }
-
-                    return rank;
-                }
-            },
-
-            getImpactChartData: {
-                writable : true,
-                enumerable : false,
-                configurable : false,
-<span id='insightsVisualizer-method-getImpactChartData'>                /**
-</span>                 * @member insightsVisualizer
-                 * @method getImpactChartData
-                 * make data for impact chart from insight result
-                 * @param {Object} ruleResults insight result
-                 * @return {Object} data for impact chart data
-                 */
-                value: function(ruleResults) {
-                    var ruleResultKeys = Object.keys(ruleResults),
-                        data = [];
-
-                    ruleResultKeys.forEach(function(key) {
-                        data.push( [
-                            ruleResults[key].localizedRuleName,
-                            ruleResults[key].ruleImpact
-                        ]);
-                    });
-
-                    return google.visualization.arrayToDataTable(data);
-                }
-            },
-
-<span id='insightsVisualizer-method-renderChart'>            /**
-</span>             * @member insightsVisualizer
-             * @method renderChart
-             * render chart from data
-             * @param {String} type chart type
-             * @param {Object} data data for chart
-             * @param {Object} element DOM element of chart
-             */
-            renderChart: {
-                writable : true,
-                enumerable : false,
-                configurable : false,
-                value: function(type, data, element) {
-                    var chart,
-                        options = {
-                            backgroundColor: '#000000',
-                            legend: {
-                                textStyle: {
-                                    color: '#ffffff'
-                                }
-                            }
-                        };
-
-                    switch(type) {
-                        case 'pie':
-                            chart = new google.visualization.PieChart(element);
-                            break;
-                    }
-
-                    chart.draw(data, options);
-                }
+                chart.draw(data, options);
             }
         }
-    );
+    });
 
     document.addEventListener('DOMContentLoaded', function() {
         util.googlize(document.getElementsByTagName('h1')[0]);

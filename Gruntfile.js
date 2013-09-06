@@ -25,7 +25,7 @@ module.exports = function (grunt) {
           'work/js/app/*.js',
           'work/sass/*.scss',
         ],
-        tasks: ['jshint', 'uglify', 'compass', 'delayed-livereload', 'jsduck']
+        tasks: ['jshint', 'uglify', 'compass', 'jsduck', 'delayed-livereload']
       },
       jade: {
         files: ['app/views/**/*.jade'],
@@ -101,6 +101,7 @@ module.exports = function (grunt) {
           requestAnimationFrame: true,
           google: true,
           XMLHttpRequest: true,
+          io: true,
         },
       },
       defaults: ['work/js/app/*.js'],
@@ -132,5 +133,5 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-contrib-compass');
   grunt.loadNpmTasks('grunt-jsduck');
 
-  grunt.registerTask('default', ['uglify', 'compass', 'jsduck', 'watch']);
+  grunt.registerTask('default', ['jshint', 'uglify', 'compass', 'jsduck', 'watch']);
 };
