@@ -242,7 +242,9 @@ google.load('visualization', '1', {packages:['corechart']});
             value: function(e) {
                 var url = e.currentTarget.querySelector('input[type="url"]').value,
                     query = util.obj2Query( {
-                        url: url
+                        url: url,
+                        strategy: 'mobile',
+                        locale: 'ja'
                     }),
                     resultElement = document.getElementsByClassName('result')[0],
                     childs = util.obj2Arr(resultElement.childNodes),
