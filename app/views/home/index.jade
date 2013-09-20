@@ -3,7 +3,16 @@ extends ../layout
 block content
   h1 #{title}
   form.search-form(name="search-form")
-    input(type="url", name="url", autocomplete="on", placeholder="http://example.com")
+    div
+      input(type="url", name="url", autocomplete="on", placeholder="http://example.com")
+    div.check-row
+      input(type="radio", name="type", id="mobile", value="1", checked="true")
+      label(for="mobile") Mobile
+      input(type="radio", name="type", id="pc", value="2")
+      label(for="pc") PC
+
+  div#loading.loading
+    div.spinner
 
   div.result
     section

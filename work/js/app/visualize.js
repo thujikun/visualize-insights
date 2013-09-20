@@ -87,6 +87,12 @@ google.load('visualization', '1', {packages:['corechart']});
 
                 /**
                  * @member util.process
+                 * @property {Object} element loading DOM
+                 */
+                element: document.getElementById('loading'),
+
+                /**
+                 * @member util.process
                  * @property {Boolean} processing processing flag
                  */
                 processing: false,
@@ -108,6 +114,7 @@ google.load('visualization', '1', {packages:['corechart']});
                  */
                 on: function() {
                     this.processing = true;
+                    this.element.style.display = 'block';
                 },
 
                 /**
@@ -117,6 +124,7 @@ google.load('visualization', '1', {packages:['corechart']});
                  */
                 off: function() {
                     this.processing = false;
+                    this.element.style.display = 'none';
                 }
             }
         }
@@ -138,6 +146,7 @@ google.load('visualization', '1', {packages:['corechart']});
          * @member SocketManager
          * @method init
          * SocketManager constructor
+         * @param {String} url url of websocket
          */
         init: {
             writable : true,
@@ -241,9 +250,11 @@ google.load('visualization', '1', {packages:['corechart']});
              */
             value: function(e) {
                 var url = e.currentTarget.querySelector('input[type="url"]').value,
+                    type = e.currentTarget.querySelector('input[type="radio"]:checked').value,
+                    strategy = type === '1'? 'mobile': 'desktop',
                     query = util.obj2Query( {
                         url: url,
-                        strategy: 'mobile',
+                        strategy: strategy,
                         locale: 'ja'
                     }),
                     resultElement = document.getElementsByClassName('result')[0],
@@ -263,9 +274,13 @@ google.load('visualization', '1', {packages:['corechart']});
                 xhr.open('GET', this.CONST.INSIGHTS_API_URL + query, true);
                 xhr.responseType = 'JSON';
                 xhr.onload = function() {
+                    var result = JSON.parse(this.responseText);
+
                     util.process.off();
+
                     if(this.status === 200) {
-                        insightsVisualizer.visualizeInsightsResult(JSON.parse(this.responseText));
+                        insightsVisualizer.socket.send('setInsightsResult', result);
+                        insightsVisualizer.visualizeInsightsResult(result);
                     } else {
                         alert('error');
                     }

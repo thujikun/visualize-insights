@@ -102,6 +102,12 @@
              */
             value: {
 
+<span id='util-process-property-element'>                /**
+</span>                 * @member util.process
+                 * @property {Object} element loading DOM
+                 */
+                element: document.getElementById('loading'),
+
 <span id='util-process-property-processing'>                /**
 </span>                 * @member util.process
                  * @property {Boolean} processing processing flag
@@ -125,6 +131,7 @@
                  */
                 on: function() {
                     this.processing = true;
+                    this.element.style.display = 'block';
                 },
 
 <span id='util-process-method-off'>                /**
@@ -134,6 +141,7 @@
                  */
                 off: function() {
                     this.processing = false;
+                    this.element.style.display = 'none';
                 }
             }
         }
@@ -155,6 +163,7 @@
 </span>         * @member SocketManager
          * @method init
          * SocketManager constructor
+         * @param {String} url url of websocket
          */
         init: {
             writable : true,
@@ -258,9 +267,11 @@
              */
             value: function(e) {
                 var url = e.currentTarget.querySelector('input[type=&quot;url&quot;]').value,
+                    type = e.currentTarget.querySelector('input[type=&quot;radio&quot;]:checked').value,
+                    strategy = type === '1'? 'mobile': 'desktop',
                     query = util.obj2Query( {
                         url: url,
-                        strategy: 'mobile',
+                        strategy: strategy,
                         locale: 'ja'
                     }),
                     resultElement = document.getElementsByClassName('result')[0],
@@ -280,9 +291,13 @@
                 xhr.open('GET', this.CONST.INSIGHTS_API_URL + query, true);
                 xhr.responseType = 'JSON';
                 xhr.onload = function() {
+                    var result = JSON.parse(this.responseText);
+
                     util.process.off();
+
                     if(this.status === 200) {
-                        insightsVisualizer.visualizeInsightsResult(JSON.parse(this.responseText));
+                        insightsVisualizer.socket.send('setInsightsResult', result);
+                        insightsVisualizer.visualizeInsightsResult(result);
                     } else {
                         alert('error');
                     }
