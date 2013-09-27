@@ -249,7 +249,8 @@ google.load('visualization', '1', {packages:['corechart']});
              * @param {Object} e Event object
              */
             value: function(e) {
-                var url = e.currentTarget.querySelector('input[type="url"]').value,
+                var that = this,
+                    url = e.currentTarget.querySelector('input[type="url"]').value,
                     type = e.currentTarget.querySelector('input[type="radio"]:checked').value,
                     strategy = type === '1'? 'mobile': 'desktop',
                     query = util.obj2Query( {
@@ -279,7 +280,7 @@ google.load('visualization', '1', {packages:['corechart']});
                     util.process.off();
 
                     if(this.status === 200) {
-                        insightsVisualizer.socket.send('setInsightsResult', result);
+                        insightsVisualizer.socket.send(that.channels.set, result);
                         insightsVisualizer.visualizeInsightsResult(result);
                     } else {
                         alert('error');
@@ -306,8 +307,6 @@ google.load('visualization', '1', {packages:['corechart']});
                     sections = util.obj2Arr(document.getElementsByTagName('section')),
                     scoreElement = document.getElementsByClassName('score')[0],
                     data;
-
-                this.socket.send(this.channels.set, response);
 
                 sections.forEach(function(section) {
                     section.style.display = 'block';

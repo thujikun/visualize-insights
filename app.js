@@ -9,4 +9,4 @@ require('./config/routes')(app);
 
 server.listen(config.port);
 
-require('./controllers/socket')(socketio);
+require('./app/controllers/socket')(socketio);
