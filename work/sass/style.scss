@@ -1,5 +1,6 @@
 @import "compass/reset";
 @import "bourbon/bourbon";
+@import "pure/pure";
 
 body {
     background: #000000;
@@ -22,6 +23,7 @@ h1 {
     input[type=url] {
         width: 600px;
         height: 30px;
+        padding: 15px 10px;
         font-size: 20px;
     }
 
@@ -30,11 +32,16 @@ h1 {
         text-align: left;
     }
 
-    input[type=radio]:nth-child(3) {
-        margin-left: 20px;
+    input[type=radio] {
+        margin-right: 5px;
+        
+        &:nth-child(3) {
+            margin-left: 20px;
+        }
     }
 
     label {
+        display: inline;
         font-size: 20px;
         vertical-align: middle;
     }
